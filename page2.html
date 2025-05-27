@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المراحل التعليمية</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>tailwind.config={theme:{extend:{colors:{primary:'#4F46E5',secondary:'#F59E0B'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        :where([class^="ri-"])::before { content: "\f3c2"; }
+        body {
+            font-family: 'Tajawal', sans-serif;
+        }
+        .btn-hover:active {
+            transform: scale(0.98);
+        }
+    </style>
+<body class="bg-gray-50">    <div class="relative min-h-screen w-full max-w-[375px] mx-auto pb-20">        <main class="px-5 pt-20 pb-24">
+            <div class="relative overflow-hidden rounded-lg mb-8 h-[140px]">
+                <img src="https://readdy.ai/api/search-image?query=colorful%20educational%20background%20for%20children%20with%20books%2C%20pencils%20and%20educational%20elements%2C%20cartoon%20style%2C%20vibrant%20colors%2C%20suitable%20for%20elementary%20school%20students&width=375&height=140&seq=123&orientation=landscape" alt="تعليم الأطفال" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-r from-primary/80 to-transparent flex flex-col justify-center px-5">
+                    <h2 class="text-white text-xl font-bold mb-1">مرحباً بك في عالم التعلم!</h2>
+                    <p class="text-white text-sm">اختر المرحلة الدراسية المناسبة</p>
+                </div>
+            </div>
+
+            <div class="space-y-4 mb-8">
+                <h3 class="text-gray-700 font-bold text-lg mb-3">المراحل الدراسية</h3>
+                
+                <a href="page3.html" class="w-full bg-white shadow-md rounded-button p-4 flex items-center justify-between btn-hover transition cursor-pointer hover:bg-gray-50 no-underline">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center ml-3">
+                            <i class="ri-book-open-line ri-lg text-primary"></i>
+                        </div>
+                        <span class="text-gray-800 font-medium">سنة ثالثة ابتدائي</span>
+                    </div>
+                    <i class="ri-arrow-left-s-line ri-lg text-gray-400"></i>                </a>
+                
+                <a href="page3.html" class="w-full bg-white shadow-md rounded-button p-4 flex items-center justify-between btn-hover transition cursor-pointer hover:bg-gray-50 no-underline">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center ml-3">
+                            <i class="ri-book-read-line ri-lg text-primary"></i>
+                        </div>
+                        <span class="text-gray-800 font-medium">السنة الرابعة ابتدائي</span>
+                    </div>
+                    <i class="ri-arrow-left-s-line ri-lg text-gray-400"></i>                </a>
+                
+                <a href="page3.html" class="w-full bg-white shadow-md rounded-button p-4 flex items-center justify-between btn-hover transition cursor-pointer hover:bg-gray-50 no-underline">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center ml-3">
+                            <i class="ri-graduation-cap-line ri-lg text-primary"></i>
+                        </div>
+                        <span class="text-gray-800 font-medium">السنة الخامسة ابتدائي</span>
+                    </div>
+                    <i class="ri-arrow-left-s-line ri-lg text-gray-400"></i>                </a>
+            </div>
+
+            <div class="space-y-4">
+                <h3 class="text-gray-700 font-bold text-lg mb-3">موارد إضافية</h3>
+
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <a href="page4.html"  class="bg-white shadow-md rounded-button p-4 flex flex-col items-center justify-center btn-hover transition cursor-pointer hover:bg-gray-50 h-[120px]">
+                        <div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center mb-2">
+                            <i class="ri-gamepad-line ri-lg text-secondary"></i>
+                        </div>
+                        <span class="text-gray-800 font-medium text-center">ألعاب تعليمية</span>
+                    </a>
+                    
+                    <a href="page5.html" class="bg-white shadow-md rounded-button p-4 flex flex-col items-center justify-center btn-hover transition cursor-pointer hover:bg-gray-50 h-[120px]">
+                        <div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center mb-2">
+                            <i class="ri-music-line ri-lg text-secondary"></i>
+                        </div>
+                        <span class="text-gray-800 font-medium text-center">أناشيد</span>
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+<script>document.addEventListener('DOMContentLoaded', function() {const buttons = document.querySelectorAll('.btn-hover');buttons.forEach(button => {button.addEventListener('click', function() {// Handle button click events hereconsole.log('Button clicked:', this.textContent.trim());});});});</script>
+</body>
+</html>

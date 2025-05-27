@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>أناشيد الأطفال التعليمية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Changa:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* تعريف متغيرات CSS لسهولة التخصيص */
+        :root {
+            --primary-bg-color: #fefae0;
+            --header-color: #333;
+            --button-bg-color: #90be6d;
+            --button-hover-color: #588157;
+            --text-color: #333;
+            --border-radius: 8px;
+            --spacing-unit: 15px;
+        }
+
+        body {
+            font-family: 'Changa', sans-serif; /* استخدام الخط الجديد */
+            direction: rtl;
+            background-color: var(--primary-bg-color);
+            padding: var(--spacing-unit);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* توسيط المحتوى أفقياً */
+            min-height: 100vh; /* جعل الصفحة تأخذ كامل ارتفاع الشاشة */
+        }
+
+        h1 {
+            color: var(--header-color);
+            margin-bottom: calc(var(--spacing-unit) * 2);
+            font-size: clamp(1.8rem, 5vw, 3rem); /* حجم خط متجاوب */
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            max-width: 600px;
+            width: 100%; /* لضمان أقصى عرض على الشاشات الصغيرة */
+            margin: auto;
+        }
+
+        li {
+            margin: var(--spacing-unit) 0;
+        }
+
+        button {
+            padding: 12px 20px; /* زيادة مساحة الضغط */
+            font-size: clamp(1rem, 3.5vw, 1.1rem); /* حجم خط متجاوب */
+            border: none;
+            border-radius: var(--border-radius);
+            background-color: var(--button-bg-color);
+            color: white;
+            cursor: pointer;
+            width: 100%;
+            max-width: 300px;
+            transition: background-color 0.3s ease, transform 0.1s ease; /* تأثيرات عند التحويم */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* إضافة ظل */
+        }
+
+        button:hover {
+            background-color: var(--button-hover-color);
+            transform: translateY(-2px); /* تأثير رفع طفيف */
+        }
+        button:active {
+            transform: translateY(0); /* تأثير الضغط */
+        }
+
+        button.active { /* فئة للزر النشط */
+            background-color: #588157; /* لون مميز للزر قيد التشغيل */
+            border: 2px solid #3a5a40;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2) inset;
+        }
+
+        #player-container {
+            margin-top: calc(var(--spacing-unit) * 2);
+            width: 100%;
+            max-width: 600px;
+            /* للحفاظ على نسبة أبعاد 16:9 للفيديو */
+            position: relative;
+            padding-bottom: 56.25%; /* نسبة 9/16 = 0.5625 */
+            height: 0;
+            overflow: hidden;
+            background-color: #000; /* خلفية سوداء قبل تحميل الفيديو */
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+        
+        #player-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>أناشيد الأطفال التعليمية</h1>
+    <ul id="song-list">
+        <li><button data-video-id="IzIrIvdunmE">تعليم الألوان والأرقام والحروف والأشكال</button></li>
+        <li><button data-video-id="D5hey-BMoMc">أغاني أطفال تعليمية: الحروف، الأرقام، الألوان</button></li>
+        <li><button data-video-id="lDXqkhFxhsk">أنشودة "هيا نتعلم يا أطفال" – الحروف، الأرقام، الألوان</button></li>
+        <li><button data-video-id="tmx4UjNF3L4">تعليم الألوان والأرقام للأطفال</button></li>
+        <li><button data-video-id="732FAc_qpHg">أنشودة الأرقام العربية للأطفال</button></li>
+        <li><button data-video-id="y55Ly7JMHUM">تعليم الحروف الهجائية والألوان والأرقام</button></li>
+        <li><button data-video-id="Yd-0i32A2us">أنشودة "أناشيد الروضة" – الألوان، الحروف، الأرقام</button></li>
+        <li><button data-video-id="rR8Vmu5aVNs">أغنية الأرقام للأطفال باللغة العربية</button></li>
+        <li><button data-video-id="cwXPoR36AgE">الأرقام والألوان للأطفال باللغة العربية</button></li>
+        <li><button data-video-id="rxZyI7I8DmQ">الألوان، الأشكال، الحروف العربية – أغاني الأطفال</button></li>
+    </ul>
+
+    <div id="player-container"></div>
+
+    <script>
+        const playerContainer = document.getElementById('player-container');
+        const songList = document.getElementById('song-list');
+        let currentIframe = null; // للاحتفاظ بمرجع للإطار الحالي
+
+        /**
+         * دالة لتضمين وتشغيل فيديو يوتيوب محدد.
+         * @param {string} videoId - معرّف الفيديو من يوتيوب.
+         * @param {HTMLElement} clickedButton - الزر الذي تم النقر عليه.
+         */
+        function loadVideo(videoId, clickedButton) {
+            const youtubeEmbedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`; // autoplay لتشغيل فوري، rel=0 لإخفاء الفيديوهات ذات الصلة
+
+            // إذا كان هناك إطار iframe موجود بالفعل، نعدل فقط مصدره
+            if (currentIframe) {
+                currentIframe.src = youtubeEmbedUrl;
+            } else {
+                // إنشاء إطار iframe جديد إذا لم يكن موجوداً
+                currentIframe = document.createElement('iframe');
+                currentIframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
+                currentIframe.setAttribute('allowfullscreen', '');
+                currentIframe.setAttribute('title', 'YouTube video player');
+                currentIframe.src = youtubeEmbedUrl;
+                playerContainer.appendChild(currentIframe);
+            }
+
+            // إزالة الفئة 'active' من جميع الأزرار
+            document.querySelectorAll('#song-list button').forEach(button => {
+                button.classList.remove('active');
+            });
+            // إضافة الفئة 'active' للزر الذي تم النقر عليه
+            if (clickedButton) {
+                clickedButton.classList.add('active');
+            }
+        }
+
+        // إضافة معالجات الأحداث للأزرار بعد تحميل DOM
+        document.addEventListener('DOMContentLoaded', () => {
+            const buttons = songList.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const videoId = event.target.dataset.videoId;
+                    loadVideo(videoId, event.target);
+                });
+            });
+
+            // تشغيل أول فيديو تلقائياً عند تحميل الصفحة (اختياري)
+            if (buttons.length > 0) {
+                const firstVideoId = buttons[0].dataset.videoId;
+                loadVideo(firstVideoId, buttons[0]);
+            }
+        });
+    </script>
+</body>
+</html>

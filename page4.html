@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>لعبة الكلمات للأطفال - 10 مراحل</title>
+    <link href="https://fonts.googleapis.com/css2?family=Changa:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #115293;
+            --secondary-color: #4DB6AC;
+            --tertiary-color: #81D4FA;
+            --correct-color: #2E7D32;
+            --error-color: #C62828;
+            --light-bg: #F0F8FF;
+            --text-color: #333;
+            --border-radius: 8px;
+            --spacing-unit: 1.2rem; /* للتحكم في المسافات بشكل متجاوب */
+        }
+
+        body {
+            background: var(--light-bg);
+            font-family: "Changa", sans-serif; /* خط عربي أكثر وضوحًا وجاذبية */
+            direction: rtl;
+            text-align: center;
+            padding: var(--spacing-unit);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            margin-bottom: var(--spacing-unit);
+            color: var(--primary-color);
+            font-size: clamp(1.5rem, 5vw, 2.5rem); /* حجم خط متجاوب */
+        }
+
+        #stage-number {
+            font-size: clamp(1rem, 3.5vw, 1.5rem);
+            margin-bottom: calc(var(--spacing-unit) / 2);
+            color: #1565c0;
+        }
+
+        #letters-container,
+        #answer-container {
+            margin: var(--spacing-unit) auto;
+            width: 90%; /* عرض نسبي */
+            max-width: 450px; /* لتحديد عرض أقصى على الشاشات الكبيرة */
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: calc(var(--spacing-unit) / 1.5); /* مسافة متجاوبة بين العناصر */
+            min-height: 70px; /* ضمان ارتفاع كافٍ للحاويات */
+        }
+
+        .letter,
+        .answer-letter {
+            width: clamp(45px, 12vw, 70px); /* حجم حرف متجاوب */
+            height: clamp(45px, 12vw, 70px);
+            line-height: clamp(45px, 12vw, 70px);
+            font-size: clamp(1.5rem, 6vw, 2.5rem); /* حجم خط الحرف */
+            font-weight: bold;
+            border-radius: var(--border-radius);
+            user-select: none;
+            transition: background-color 0.3s, transform 0.1s;
+            flex-shrink: 0; /* منع تقلص الحروف بشكل مفرط */
+        }
+
+        .letter {
+            background-color: var(--secondary-color);
+            color: white;
+            cursor: pointer;
+        }
+
+        .letter:hover {
+            background-color: #00897b;
+            transform: translateY(-2px); /* تأثير خفيف عند التحويم */
+        }
+
+        .letter:active {
+            transform: translateY(0);
+        }
+
+        .answer-letter {
+            background-color: var(--tertiary-color);
+            color: #01579b;
+            cursor: pointer; /* للإشارة إلى أنه يمكن إزالته */
+        }
+
+        button {
+            margin-top: calc(var(--spacing-unit) * 1.5);
+            background-color: #0288d1;
+            border: none;
+            color: white;
+            font-size: clamp(1rem, 4vw, 1.2rem);
+            padding: calc(var(--spacing-unit) / 1.5) calc(var(--spacing-unit) * 1.5);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+            min-width: 120px; /* لضمان حجم كافٍ للأزرار */
+        }
+
+        button:hover:not(:disabled) {
+            background-color: #01579b;
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background-color: #90caf9;
+            cursor: default;
+            transform: none;
+        }
+
+        #message {
+            margin-top: var(--spacing-unit);
+            font-size: clamp(1.1rem, 4.5vw, 1.7rem);
+            font-weight: bold;
+            min-height: 30px; /* لضمان عدم اهتزاز التخطيط */
+            color: var(--correct-color);
+        }
+
+        #reset-btn {
+            background-color: var(--error-color);
+            margin-left: var(--spacing-unit);
+        }
+
+        #reset-btn:hover:not(:disabled) {
+            background-color: #b71c1c;
+        }
+
+        #play-again-btn {
+            background-color: var(--correct-color);
+            display: none; /* يتم إظهاره فقط عند الانتهاء من اللعبة */
+        }
+
+        #play-again-btn:hover {
+            background-color: #1b5e20;
+        }
+    </style>
+</head>
+<body>
+
+<h1>لعبة الكلمات للأطفال - ابحث عن الكلمة المناسبة</h1>
+<div id="stage-number">المرحلة 1 من 10</div>
+
+<div id="letters-container"></div>
+<div id="answer-container"></div>
+
+<div>
+    <button id="check-btn" disabled>تحقق</button>
+    <button id="reset-btn" disabled>إعادة ترتيب</button>
+    <button id="play-again-btn" style="display:none;">إعادة اللعب</button>
+</div>
+
+<div id="message"></div>
+
+<script>
+    const stages = [
+        {word: "قلم", letters: ["ق", "ل", "م"]},
+        {word: "بيت", letters: ["ب", "ي", "ت"]},
+        {word: "كتاب", letters: ["ك", "ت", "ا", "ب"]},
+        {word: "تفاح", letters: ["ت", "ف", "ا", "ح"]},
+        {word: "مدرسة", letters: ["م", "د", "ر", "س", "ة"]},
+        {word: "حديقة", letters: ["ح", "د", "ي", "ق", "ة"]},
+        {word: "صديق", letters: ["ص", "د", "ي", "ق"]},
+        {word: "سمكة", letters: ["س", "م", "ك", "ة"]},
+        {word: "شجرة", letters: ["ش", "ج", "ر", "ة"]},
+        {word: "مدينة", letters: ["م", "د", "ي", "ن", "ة"]},
+    ];
+
+    let currentStage = 0;
+    let selectedLetters = [];
+    let currentShuffledLetters = []; // لتخزين الترتيب الحالي للحروف في كل مرحلة
+
+    const lettersContainer = document.getElementById("letters-container");
+    const answerContainer = document.getElementById("answer-container");
+    const stageNumber = document.getElementById("stage-number");
+    const checkBtn = document.getElementById("check-btn");
+    const resetBtn = document.getElementById("reset-btn");
+    const playAgainBtn = document.getElementById("play-again-btn");
+    const message = document.getElementById("message");
+
+    function shuffle(array) {
+        let arr = array.slice();
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function loadStage(index) {
+        selectedLetters = [];
+        message.textContent = "";
+        checkBtn.disabled = true;
+        resetBtn.disabled = true;
+        playAgainBtn.style.display = "none";
+
+        stageNumber.textContent = `المرحلة ${index + 1} من ${stages.length}`;
+
+        // خلط الحروف وتخزينها
+        currentShuffledLetters = shuffle(stages[index].letters);
+
+        // عرض الحروف المختلطة
+        lettersContainer.innerHTML = "";
+        currentShuffledLetters.forEach((letter, i) => {
+            const btn = document.createElement("div");
+            btn.textContent = letter;
+            btn.className = "letter";
+            btn.dataset.originalIndex = i; // لتتبع الحرف الأصلي
+            btn.addEventListener("click", () => selectLetter(btn, letter, i));
+            lettersContainer.appendChild(btn);
+        });
+
+        // مكان الإجابة
+        answerContainer.innerHTML = "";
+    }
+
+    function selectLetter(clickedBtn, letter, originalIndex) {
+        if (clickedBtn.classList.contains("selected")) return; // منع النقر على نفس الحرف مرتين
+
+        selectedLetters.push({letter, originalIndex: clickedBtn.dataset.originalIndex});
+        clickedBtn.classList.add("selected"); // وسم الحرف بأنه مختار
+        clickedBtn.style.visibility = "hidden"; // إخفاء الحرف من حاوية الحروف
+
+        const span = document.createElement("div");
+        span.textContent = letter;
+        span.className = "answer-letter";
+        span.title = "اضغط لإزالة";
+        span.dataset.originalIndex = clickedBtn.dataset.originalIndex; // ربط الحرف في الإجابة بمصدره الأصلي
+        span.addEventListener("click", () => removeLetter(span));
+        answerContainer.appendChild(span);
+
+        checkBtn.disabled = false;
+        resetBtn.disabled = false;
+    }
+
+    function removeLetter(span) {
+        const originalIndexToRemove = span.dataset.originalIndex;
+        selectedLetters = selectedLetters.filter(item => !(item.originalIndex === originalIndexToRemove && item.letter === span.textContent));
+        span.remove();
+
+        // إظهار الحرف مرة أخرى في حاوية الحروف الأصلية
+        const originalBtn = lettersContainer.querySelector(`.letter[data-original-index="${originalIndexToRemove}"]`);
+        if (originalBtn) {
+            originalBtn.style.visibility = "visible";
+            originalBtn.classList.remove("selected");
+        }
+
+        if (selectedLetters.length === 0) {
+            checkBtn.disabled = true;
+            resetBtn.disabled = true;
+            message.textContent = "";
+        }
+    }
+
+    checkBtn.addEventListener("click", () => {
+        let answer = selectedLetters.map(x => x.letter).join("");
+        if (answer === stages[currentStage].word) {
+            message.style.color = "var(--correct-color)";
+            message.textContent = "ممتاز! الكلمة صحيحة.";
+            checkBtn.disabled = true; // تعطيل زر التحقق بعد الإجابة الصحيحة
+            resetBtn.disabled = true; // تعطيل زر إعادة الترتيب
+
+            if (currentStage < stages.length - 1) {
+                currentStage++;
+                setTimeout(() => loadStage(currentStage), 1500);
+            } else {
+                message.textContent = "مبروك! لقد أكملت جميع المراحل.";
+                playAgainBtn.style.display = "inline-block"; // إظهار زر إعادة اللعب
+            }
+        } else {
+            message.style.color = "var(--error-color)";
+            message.textContent = "الكلمة غير صحيحة، حاول مرة أخرى.";
+        }
+    });
+
+    resetBtn.addEventListener("click", () => {
+        // إعادة خلط الحروف المتبقية وإعادة ترتيبها
+        const currentStageData = stages[currentStage];
+        currentShuffledLetters = shuffle(currentStageData.letters); // إعادة خلط الحروف الأصلية للمرحلة
+        selectedLetters = []; // مسح الحروف المختارة
+
+        lettersContainer.innerHTML = ""; // مسح الحروف الموجودة
+        currentShuffledLetters.forEach((letter, i) => {
+            const btn = document.createElement("div");
+            btn.textContent = letter;
+            btn.className = "letter";
+            btn.dataset.originalIndex = i; // تعيين فهرس أصلي جديد للحرف المخلوط
+            btn.addEventListener("click", () => selectLetter(btn, letter, i));
+            lettersContainer.appendChild(btn);
+        });
+
+        answerContainer.innerHTML = ""; // مسح الإجابة
+        message.textContent = "";
+        checkBtn.disabled = true;
+        resetBtn.disabled = true;
+    });
+
+    playAgainBtn.addEventListener("click", () => {
+        currentStage = 0;
+        loadStage(currentStage);
+    });
+
+    loadStage(currentStage);
+</script>
+
+</body>
+</html>

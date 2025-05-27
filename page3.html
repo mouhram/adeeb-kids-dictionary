@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>قاموس الأطفال</title>
+    <link href="https://fonts.googleapis.com/css2?family=Changa:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* تعريف المتغيرات الأساسية للتحكم السهل في التصميم */
+        :root {
+            --primary-color: #4CAF50; /* أخضر جذاب للعناوين والأزرار الرئيسية */
+            --secondary-color: #2196F3; /* أزرق للأزرار الثانوية والتفاعل */
+            --background-color: #E8F5E9; /* لون خلفية فاتح ومريح للعين */
+            --text-color: #333; /* لون النص الأساسي */
+            --card-bg: #FFFFFF; /* خلفية بطاقة النتيجة */
+            --error-color: #D32F2F; /* لون رسائل الخطأ */
+            --border-radius: 12px; /* نصف قطر الحدود للعناصر الدائرية */
+            --spacing-unit: 1rem; /* وحدة مسافة أساسية للتحكم في التباعد */
+        }
+
+        /* تنسيق الجسم لضمان التجاوبية والمحاذاة المركزية */
+        body {
+            font-family: 'Changa', sans-serif; /* استخدام الخط العربي الجديد */
+            text-align: center;
+            padding: var(--spacing-unit); /* مسافة بادئة حول المحتوى */
+            direction: rtl; /* اتجاه النص من اليمين لليسار للعربية */
+            background-color: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh; /* ارتفاع كامل لنافذة العرض */
+            display: flex;
+            flex-direction: column; /* ترتيب العناصر عمودياً */
+            align-items: center; /* توسيط العناصر أفقياً */
+            justify-content: center; /* توسيط المحتوى عمودياً */
+        }
+
+        /* تنسيق العنوان الرئيسي */
+        h1 {
+            color: var(--primary-color);
+            font-size: clamp(2rem, 6vw, 3rem); /* حجم خط متجاوب */
+            margin-bottom: var(--spacing-unit);
+        }
+
+        /* حاوية حقل البحث لضمان التوسيط */
+        .search-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: var(--spacing-unit);
+            width: 100%;
+            max-width: 400px; /* تحديد أقصى عرض لمدخل البحث على الشاشات الكبيرة */
+        }
+
+        /* تنسيق حقل الإدخال */
+        input[type="text"] {
+            padding: calc(var(--spacing-unit) * 0.75);
+            width: 90%; /* عرض نسبي */
+            max-width: 300px; /* تحديد أقصى عرض للحقل */
+            border: 2px solid var(--primary-color);
+            border-radius: var(--border-radius);
+            font-size: clamp(1rem, 4vw, 1.2rem); /* حجم خط متجاوب */
+            outline: none; /* إزالة إطار التركيز الافتراضي */
+            transition: border-color 0.3s ease; /* تأثير انتقال عند التركيز */
+            text-align: right; /* محاذاة النص لليمين */
+            box-sizing: border-box; /* لضمان عدم تجاوز العرض المحدد بسبب الـ padding والـ border */
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--secondary-color); /* تغيير لون الإطار عند التركيز */
+        }
+
+        /* تنسيق بطاقة النتيجة */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid #D1D1D1;
+            padding: calc(var(--spacing-unit) * 1.5);
+            margin-top: calc(var(--spacing-unit) * 1.5);
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* ظل خفيف للبطاقة */
+            display: none; /* مخفي افتراضيا، يتم إظهاره بالـ JS */
+            width: 90%;
+            max-width: 450px;
+            flex-direction: column; /* ترتيب المحتوى عمودياً */
+            align-items: center; /* توسيط المحتوى داخل البطاقة */
+            box-sizing: border-box;
+        }
+
+        /* تنسيق عنوان الكلمة داخل البطاقة */
+        .card h2 {
+            color: var(--primary-color);
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            margin-bottom: calc(var(--spacing-unit) * 0.5);
+        }
+
+        /* تنسيق وصف الكلمة داخل البطاقة */
+        .card p {
+            font-size: clamp(1rem, 3.5vw, 1.2rem);
+            color: var(--text-color);
+            margin-bottom: var(--spacing-unit);
+        }
+
+        /* تنسيق الصورة داخل البطاقة */
+        .card img {
+            max-width: 80%; /* صورة متجاوبة */
+            height: auto; /* للحفاظ على نسبة العرض إلى الارتفاع */
+            border-radius: var(--border-radius);
+            margin-bottom: var(--spacing-unit);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* تنسيق الأزرار */
+        button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: calc(var(--spacing-unit) * 0.75) calc(var(--spacing-unit) * 1.5);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: clamp(1rem, 3.5vw, 1.2rem);
+            transition: background-color 0.3s ease, transform 0.1s ease; /* تأثيرات عند التحويم والنقر */
+        }
+
+        button:hover {
+            background-color: #1976D2; /* لون أغمق عند التحويم */
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* تنسيق رسالة الخطأ */
+        #message {
+            color: var(--error-color);
+            margin-top: var(--spacing-unit);
+            font-size: clamp(1rem, 3.5vw, 1.2rem);
+            min-height: 25px; /* للحفاظ على مساحة ثابتة ومنع اهتزاز التخطيط */
+        }
+
+        /* تنسيق رسالة التحميل */
+        #loading-message {
+            color: #616161;
+            margin-top: var(--spacing-unit);
+            font-size: clamp(1rem, 3.5vw, 1.2rem);
+            display: none; /* مخفي افتراضيا، يظهر عند التحميل */
+        }
+    </style>
+</head>
+<body>
+    <h1>قاموس الأطفال</h1>
+    <div class="search-container">
+        <input type="text" id="search" placeholder="اكتب الكلمة..." />
+    </div>
+    
+    <div id="loading-message">جاري التحميل...</div>
+
+    <div id="result" class="card">
+        <h2 id="word"></h2>
+        <p id="description"></p>
+        <img id="image" alt="صورة توضيحية للكلمة" />
+        <button id="speak-button" disabled>نطق الكلمة</button>
+    </div>
+    
+    <div id="message"></div>
+
+    <script>
+        let dictionaryData = {};
+        let currentWordToSpeak = "";
+        let arabicVoice = null; // لتخزين الصوت العربي المختار
+
+        // الحصول على عناصر DOM
+        const searchInput = document.getElementById("search");
+        const resultCard = document.getElementById("result");
+        const wordElement = document.getElementById("word");
+        const descriptionElement = document.getElementById("description");
+        const imageElement = document.getElementById("image");
+        const messageElement = document.getElementById("message");
+        const loadingMessage = document.getElementById("loading-message");
+        const speakButton = document.getElementById("speak-button");
+
+        // دالة لتهيئة الصوت العربي بمجرد توفر الأصوات
+        function setArabicVoice() {
+            const voices = speechSynthesis.getVoices();
+            // البحث عن صوت عربي (ar-SA هو الأفضل، لكن أي ar- يكفي كاحتياطي)
+            arabicVoice = voices.find(voice => voice.lang.startsWith('ar-SA')) || 
+                          voices.find(voice => voice.lang.startsWith('ar-'));
+            
+            if (!arabicVoice) {
+                console.warn("لم يتم العثور على صوت عربي. قد لا يعمل النطق بشكل صحيح.");
+                messageElement.textContent = "عذراً، لم يتم العثور على صوت عربي في متصفحك. قد لا يعمل النطق.";
+                messageElement.style.color = 'var(--error-color)';
+            }
+        }
+
+        // الاستماع لحدث "voiceschanged" الذي يحدث عندما تصبح قائمة الأصوات جاهزة
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = setArabicVoice;
+        } else {
+            setArabicVoice(); 
+            setTimeout(setArabicVoice, 1000); 
+        }
+        
+        // إظهار رسالة التحميل عند بدء جلب البيانات
+        loadingMessage.style.display = 'block';
+
+        // جلب البيانات من الـ API
+        fetch("https://api.sheetbest.com/sheets/91606c2e-b446-4426-a0cf-00c5589f3a2c")
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(`خطأ في جلب البيانات: ${res.status}`);
+                }
+                return res.json();
+            })
+            .then(json => {
+                json.forEach(entry => {
+                    dictionaryData[normalize(entry["الكلمة"])] = entry;
+                });
+                loadingMessage.style.display = 'none'; // إخفاء رسالة التحميل
+                searchInput.addEventListener("input", searchWord); // ربط دالة البحث بحدث الإدخال
+                speakButton.addEventListener("click", speak); // ربط زر النطق بالدالة يدويا
+            })
+            .catch(error => {
+                console.error("حدث خطأ أثناء تحميل بيانات القاموس:", error);
+                loadingMessage.textContent = "عذراً، لم نتمكن من تحميل القاموس. يرجى المحاولة لاحقاً.";
+                loadingMessage.style.color = 'var(--error-color)';
+            });
+
+        /**
+         * دالة لتطبيع الكلمات العربية (توحيد الهمزات، إزالة التشكيل، إلخ)
+         * لجعل البحث أكثر مرونة.
+         * @param {string} str - السلسلة النصية المراد تطبيعها.
+         * @returns {string} السلسلة النصية بعد التطبيع.
+         */
+        function normalize(str) {
+            return str.trim().toLowerCase()
+                      .replace(/[\u064B-\u065F]/g, "") // إزالة التشكيل (الحركات)
+                      .replace(/[أإآ]/g, "ا") // توحيد الهمزات (أ، إ، آ) إلى ألف عادية
+                      .replace(/ى/g, "ي") // توحيد الألف المقصورة إلى ياء
+                      .replace(/ة/g, "ه"); // توحيد التاء المربوطة إلى هاء
+        }
+
+        /**
+         * دالة البحث عن الكلمة المدخلة وعرض النتيجة، مع نطق الكلمة تلقائيًا.
+         */
+        function searchWord() {
+            const input = searchInput.value;
+            const query = normalize(input);
+
+            messageElement.textContent = ""; // مسح رسالة الخطأ السابقة
+            speakButton.disabled = true; // تعطيل زر النطق افتراضياً
+
+            // إذا كان حقل البحث فارغاً، إخفاء بطاقة النتيجة
+            if (query === "") {
+                resultCard.style.display = "none";
+                speechSynthesis.cancel(); // إيقاف أي نطق تلقائي إذا أفرغ المستخدم الحقل
+                return;
+            }
+
+            const result = dictionaryData[query]; // البحث عن الكلمة في الخريطة
+
+            if (result) {
+                currentWordToSpeak = result["الكلمة"]; // تحديث الكلمة للنطق
+                wordElement.textContent = result["الكلمة"];
+                descriptionElement.textContent = result["الشرح"];
+                
+                // عرض الصورة إذا كانت موجودة، وإخفاؤها بخلاف ذلك
+                if (result["الصورة"]) {
+                    imageElement.src = result["الصورة"];
+                    imageElement.style.display = 'block';
+                } else {
+                    imageElement.style.display = 'none';
+                }
+                
+                resultCard.style.display = "flex"; // عرض بطاقة النتيجة
+
+                // *********** التعديل الرئيسي هنا: النطق التلقائي ***********
+                if (arabicVoice) {
+                    speakButton.disabled = false; // تفعيل الزر اليدوي
+                    // تأخير النطق قليلاً (مثلاً 200 مللي ثانية) للسماح بتحديث الـ DOM وتهيئة المتصفح
+                    setTimeout(() => {
+                        // التحقق مرة أخرى لتجنب النطق إذا مسح المستخدم الكلمة بسرعة
+                        if (normalize(searchInput.value) === query) {
+                            speak(); 
+                        }
+                    }, 200); 
+                } else {
+                    messageElement.textContent = "الصوت العربي غير متاح. يرجى التحقق من إعدادات المتصفح/النظام.";
+                    messageElement.style.color = 'var(--error-color)';
+                }
+            } else {
+                // إخفاء بطاقة النتيجة وعرض رسالة "غير موجودة"
+                resultCard.style.display = "none";
+                speechSynthesis.cancel(); // إيقاف أي نطق إذا لم يتم العثور على الكلمة
+                messageElement.textContent = "عذرًا، الكلمة غير موجودة.";
+            }
+        }
+
+        /**
+         * دالة نطق الكلمة الحالية باستخدام SpeechSynthesis API.
+         */
+        function speak() {
+            // التحقق من دعم المتصفح لميزة النطق وتوفر صوت عربي
+            if ('speechSynthesis' in window && arabicVoice) {
+                // إلغاء أي نطق سابق لضمان عدم تداخل الأصوات
+                speechSynthesis.cancel(); 
+
+                const utterance = new SpeechSynthesisUtterance(currentWordToSpeak);
+                utterance.voice = arabicVoice; // تعيين الصوت العربي المختار
+                utterance.lang = 'ar-SA'; // لغة النطق (يجب أن تتطابق مع لغة الصوت)
+                
+                // يمكنك تعديل سرعة الصوت أو درجة النطق هنا لتحسين التجربة
+                // utterance.rate = 0.9; // أبطأ قليلاً (1 هو الافتراضي)
+                // utterance.pitch = 1; // درجة الصوت (1 هو الافتراضي)
+
+                speechSynthesis.speak(utterance);
+            } else if (!('speechSynthesis' in window)) {
+                // رسالة إذا كان المتصفح لا يدعم ميزة النطق
+                messageElement.textContent = "عذراً، متصفحك لا يدعم ميزة النطق.";
+                messageElement.style.color = 'var(--error-color)';
+            } else if (!arabicVoice) {
+                // رسالة إذا كان الصوت العربي غير متاح
+                messageElement.textContent = "الصوت العربي غير متاح. يرجى التحقق من إعدادات المتصفح/النظام.";
+                messageElement.style.color = 'var(--error-color)';
+            }
+        }
+    </script>
+</body>
+</html>
