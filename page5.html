@@ -1,173 +1,106 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>أناشيد الأطفال التعليمية</title>
-    <link href="https://fonts.googleapis.com/css2?family=Changa:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        /* تعريف متغيرات CSS لسهولة التخصيص */
-        :root {
-            --primary-bg-color: #fefae0;
-            --header-color: #333;
-            --button-bg-color: #90be6d;
-            --button-hover-color: #588157;
-            --text-color: #333;
-            --border-radius: 8px;
-            --spacing-unit: 15px;
-        }
-
-        body {
-            font-family: 'Changa', sans-serif; /* استخدام الخط الجديد */
-            direction: rtl;
-            background-color: var(--primary-bg-color);
-            padding: var(--spacing-unit);
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center; /* توسيط المحتوى أفقياً */
-            min-height: 100vh; /* جعل الصفحة تأخذ كامل ارتفاع الشاشة */
-        }
-
-        h1 {
-            color: var(--header-color);
-            margin-bottom: calc(var(--spacing-unit) * 2);
-            font-size: clamp(1.8rem, 5vw, 3rem); /* حجم خط متجاوب */
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-            max-width: 600px;
-            width: 100%; /* لضمان أقصى عرض على الشاشات الصغيرة */
-            margin: auto;
-        }
-
-        li {
-            margin: var(--spacing-unit) 0;
-        }
-
-        button {
-            padding: 12px 20px; /* زيادة مساحة الضغط */
-            font-size: clamp(1rem, 3.5vw, 1.1rem); /* حجم خط متجاوب */
-            border: none;
-            border-radius: var(--border-radius);
-            background-color: var(--button-bg-color);
-            color: white;
-            cursor: pointer;
-            width: 100%;
-            max-width: 300px;
-            transition: background-color 0.3s ease, transform 0.1s ease; /* تأثيرات عند التحويم */
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* إضافة ظل */
-        }
-
-        button:hover {
-            background-color: var(--button-hover-color);
-            transform: translateY(-2px); /* تأثير رفع طفيف */
-        }
-        button:active {
-            transform: translateY(0); /* تأثير الضغط */
-        }
-
-        button.active { /* فئة للزر النشط */
-            background-color: #588157; /* لون مميز للزر قيد التشغيل */
-            border: 2px solid #3a5a40;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2) inset;
-        }
-
-        #player-container {
-            margin-top: calc(var(--spacing-unit) * 2);
-            width: 100%;
-            max-width: 600px;
-            /* للحفاظ على نسبة أبعاد 16:9 للفيديو */
-            position: relative;
-            padding-bottom: 56.25%; /* نسبة 9/16 = 0.5625 */
-            height: 0;
-            overflow: hidden;
-            background-color: #000; /* خلفية سوداء قبل تحميل الفيديو */
-            border-radius: var(--border-radius);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
-        }
-        
-        #player-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>أناشيد تعليمية</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 15px;
+      background: #f0f8ff;
+      direction: rtl;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 20px;
+      color: #003366;
+    }
+    .buttons-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+    button {
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 15px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      min-width: 200px;
+    }
+    button:hover {
+      background-color: #005fa3;
+    }
+    .player-container {
+      position: relative;
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    @media (max-width: 480px) {
+      button {
+        min-width: 100%;
+        font-size: 16px;
+      }
+    }
+  </style>
 </head>
 <body>
 
-    <h1>أناشيد الأطفال التعليمية</h1>
-    <ul id="song-list">
-        <li><button data-video-id="IzIrIvdunmE">تعليم الألوان والأرقام والحروف والأشكال</button></li>
-        <li><button data-video-id="D5hey-BMoMc">أغاني أطفال تعليمية: الحروف، الأرقام، الألوان</button></li>
-        <li><button data-video-id="lDXqkhFxhsk">أنشودة "هيا نتعلم يا أطفال" – الحروف، الأرقام، الألوان</button></li>
-        <li><button data-video-id="tmx4UjNF3L4">تعليم الألوان والأرقام للأطفال</button></li>
-        <li><button data-video-id="732FAc_qpHg">أنشودة الأرقام العربية للأطفال</button></li>
-        <li><button data-video-id="y55Ly7JMHUM">تعليم الحروف الهجائية والألوان والأرقام</button></li>
-        <li><button data-video-id="Yd-0i32A2us">أنشودة "أناشيد الروضة" – الألوان، الحروف، الأرقام</button></li>
-        <li><button data-video-id="rR8Vmu5aVNs">أغنية الأرقام للأطفال باللغة العربية</button></li>
-        <li><button data-video-id="cwXPoR36AgE">الأرقام والألوان للأطفال باللغة العربية</button></li>
-        <li><button data-video-id="rxZyI7I8DmQ">الألوان، الأشكال، الحروف العربية – أغاني الأطفال</button></li>
-    </ul>
+  <h1>أناشيد تعليمية</h1>
 
-    <div id="player-container"></div>
+  <div class="buttons-container" id="buttons-container">
+  </div>
 
-    <script>
-        const playerContainer = document.getElementById('player-container');
-        const songList = document.getElementById('song-list');
-        let currentIframe = null; // للاحتفاظ بمرجع للإطار الحالي
+  <div class="player-container">
+    <iframe
+      id="player"
+      src=""
+      allow="autoplay"
+      allowfullscreen
+      title="مشغل الأناشيد"
+      muted
+    ></iframe>
+  </div>
 
-        /**
-         * دالة لتضمين وتشغيل فيديو يوتيوب محدد.
-         * @param {string} videoId - معرّف الفيديو من يوتيوب.
-         * @param {HTMLElement} clickedButton - الزر الذي تم النقر عليه.
-         */
-        function loadVideo(videoId, clickedButton) {
-            const youtubeEmbedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`; // autoplay لتشغيل فوري، rel=0 لإخفاء الفيديوهات ذات الصلة
+<script>
+  const songs = [
+    {name: "أنشودة أمي - أمي أمي ما أغلاها", id: "WVdY03VL19k"},
+    {name: "أنشودة جدي بحار", id: "_FWXQo3Onuo"},
+    {name: "أنشودة سندباد", id: "lqyMIBATBsc"},
+    {name: "أنشودة السفينة", id: "hpnFY5zS9lg"},
+    {name: "أنشودة القاطرة", id: "hW9VD2chAyk"},
+    {name: "أنشودة الحاسوب", id: "jFtIVFwsqu4"}
+  ];
 
-            // إذا كان هناك إطار iframe موجود بالفعل، نعدل فقط مصدره
-            if (currentIframe) {
-                currentIframe.src = youtubeEmbedUrl;
-            } else {
-                // إنشاء إطار iframe جديد إذا لم يكن موجوداً
-                currentIframe = document.createElement('iframe');
-                currentIframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
-                currentIframe.setAttribute('allowfullscreen', '');
-                currentIframe.setAttribute('title', 'YouTube video player');
-                currentIframe.src = youtubeEmbedUrl;
-                playerContainer.appendChild(currentIframe);
-            }
+  const buttonsContainer = document.getElementById('buttons-container');
+  const player = document.getElementById('player');
 
-            // إزالة الفئة 'active' من جميع الأزرار
-            document.querySelectorAll('#song-list button').forEach(button => {
-                button.classList.remove('active');
-            });
-            // إضافة الفئة 'active' للزر الذي تم النقر عليه
-            if (clickedButton) {
-                clickedButton.classList.add('active');
-            }
-        }
+  songs.forEach(song => {
+    const btn = document.createElement('button');
+    btn.textContent = song.name;
+    btn.onclick = () => {
+      player.src = `https://www.youtube.com/embed/${song.id}?autoplay=1&mute=1`;
+    };
+    buttonsContainer.appendChild(btn);
+  });
+</script>
 
-        // إضافة معالجات الأحداث للأزرار بعد تحميل DOM
-        document.addEventListener('DOMContentLoaded', () => {
-            const buttons = songList.querySelectorAll('button');
-            buttons.forEach(button => {
-                button.addEventListener('click', (event) => {
-                    const videoId = event.target.dataset.videoId;
-                    loadVideo(videoId, event.target);
-                });
-            });
-
-            // تشغيل أول فيديو تلقائياً عند تحميل الصفحة (اختياري)
-            if (buttons.length > 0) {
-                const firstVideoId = buttons[0].dataset.videoId;
-                loadVideo(firstVideoId, buttons[0]);
-            }
-        });
-    </script>
 </body>
 </html>
