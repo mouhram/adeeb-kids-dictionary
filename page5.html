@@ -65,22 +65,14 @@
 
   <h1>أناشيد تعليمية</h1>
 
-  <div class="buttons-container" id="buttons-container">
-  </div>
+  <div class="buttons-container" id="buttons-container"></div>
 
   <div class="player-container">
-    <iframe
-      id="player"
-      src=""
-      allow="autoplay"
-      allowfullscreen
-      title="مشغل الأناشيد"
-      muted
-    ></iframe>
+    <iframe id="player" src="" allow="autoplay" allowfullscreen title="مشغل الأناشيد"></iframe>
   </div>
 
 <script>
-  const songs = [
+  const embedSongs = [
     {name: "أنشودة أمي - أمي أمي ما أغلاها", id: "WVdY03VL19k"},
     {name: "أنشودة جدي بحار", id: "_FWXQo3Onuo"},
     {name: "أنشودة سندباد", id: "lqyMIBATBsc"},
@@ -89,14 +81,51 @@
     {name: "أنشودة الحاسوب", id: "jFtIVFwsqu4"}
   ];
 
+  const linkSongs = [
+    {name: "أنشود الأم الحنون", url: "https://www.youtube.com/watch?v=knCfWoy7-80"},
+    {name: "أنشودة الواحة", url: "https://www.youtube.com/watch?v=ExFvtqqF4ew"},
+    {name: "أنشودة النحت", url: "https://www.youtube.com/watch?v=UI0_DKk_eB4"},
+    {name: "أنشودة الحمامة المهاجرة", url: "https://www.youtube.com/watch?v=55e3y4WPT8s"},
+    {name: "أنشودة المسرح", url: "https://www.youtube.com/watch?v=q7RhpZj2HZM"},
+    {name: "أنشودة اليمامة و الصياد", url: "https://www.youtube.com/watch?v=uxe90-CbuYI"},
+    {name: "أنشودة مناهل المعرفة", url: "https://www.youtube.com/watch?v=CqTiUY-kb6s"},
+    {name: "أنشودة كرة القدم (كاراوكي)", url: "https://www.youtube.com/watch?v=pUOACsd8XAk"},
+    {name: "أنشودة على الخوان", url: "https://www.youtube.com/watch?v=diGhfsXBFy8"},
+    {name: "أنشودة الأمطار (كاراوكي)", url: "https://www.youtube.com/watch?v=C1ow8kRXa7w"},
+    {name: "أنشودة رياضة الأبدان", url: "https://www.youtube.com/watch?v=KhoptjBPRxM"},
+    {name: "أنشودة طبيبة حيّنا", url: "https://www.youtube.com/watch?v=fMmijMkNeUQ"},
+    {name: "أنشودة البرتقال", url: "https://www.youtube.com/watch?v=ohO1AdH1ZmI"},
+    {name: "أنشودة العصافير", url: "https://www.youtube.com/watch?v=DH-H2B6iQEI"},
+    {name: "أنشودة كرة القدم", url: "https://www.youtube.com/watch?v=zQOtvS6vsBI"},
+    {name: "أنشودة الأمطار (إيقاع)", url: "https://www.youtube.com/watch?v=PgpBjhKZLUk"},
+    {name: "أنشود اعصفي يا رياح", url: "https://www.youtube.com/watch?v=zr4UE5GcC1s"},
+    {name: "أنشودة تغريدة العندليب", url: "https://www.youtube.com/watch?v=1b1zZ3QCq8w"},
+    {name: "أنشودة الضياء", url: "https://youtu.be/KEhFL9HyKUA"},
+    {name: "أنشودة يا شهيد", url: "https://www.youtube.com/watch?v=4Bmz94YKDKc"},
+    {name: "أنشودة الأمطار", url: "https://www.youtube.com/watch?v=M-EdvTeP-D4"},
+    {name: "أنشودة أجمل الأوطان", url: "https://www.youtube.com/watch?v=yd1LB0NaEiE"},
+    {name: "أنشودة العَلَم", url: "https://www.youtube.com/watch?v=O7Y_ZsAaJJk"},
+    {name: "أنشودة الأعياد", url: "https://www.youtube.com/watch?v=1yOakc4Y4Ak"},
+    {name: "أنشودة مرحبا رمضان", url: "https://www.youtube.com/watch?v=yGhP03g9h3k"}
+  ];
+
   const buttonsContainer = document.getElementById('buttons-container');
   const player = document.getElementById('player');
 
-  songs.forEach(song => {
+  embedSongs.forEach(song => {
     const btn = document.createElement('button');
     btn.textContent = song.name;
     btn.onclick = () => {
-      player.src = `https://www.youtube.com/embed/${song.id}?autoplay=1&mute=1`;
+      player.src = `https://www.youtube.com/embed/${song.id}?autoplay=1`;
+    };
+    buttonsContainer.appendChild(btn);
+  });
+
+  linkSongs.forEach(song => {
+    const btn = document.createElement('button');
+    btn.textContent = song.name;
+    btn.onclick = () => {
+      window.open(song.url, '_blank');
     };
     buttonsContainer.appendChild(btn);
   });
